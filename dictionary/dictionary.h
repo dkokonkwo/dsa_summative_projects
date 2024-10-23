@@ -34,4 +34,13 @@ typedef struct dict_s
     node_t *root;
 } dict_t;
 
+
+dict_t *create_dict(void);
+int add_word(dict_t *dict, char *word, char *def);
+node_t *search_word(dict_t *dict, char *word);
+void disp_dict(node_t *root);
+void del_word(dict_t *dict, node_t *word);
+void del_dict(dict_t *dict);
+void swap(node_t *node1, node_t* node2);
+void del_dict_nodes(node_t *root);
 #endif
