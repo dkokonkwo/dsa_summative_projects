@@ -4,6 +4,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <unistd.h>
+#include <ctype.h>
 
 /**
  * struct symbol_s - symbol structure
@@ -55,5 +56,7 @@ void *heap_extract(heap_t *heap);
 void sift_up(heap_t *heap);
 node_t *heap_insert(heap_t *heap, void *data);
 node_t *extract_and_insert(heap_t *heap);
+void tree_delete(node_t *node, void (*free_data)(void *));
+void heap_delete(heap_t *heap, void (*free_data)(void *));
 
 #endif

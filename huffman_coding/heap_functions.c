@@ -166,3 +166,34 @@ node_t *extract_and_insert(heap_t *heap)
     heap_insert(heap, new_node);
     return new_node;
 }
+
+/**
+ * tree_delete - delete a binary tree
+ * @node: pointer to root node
+ * @free_data: pointer to function
+ */
+void tree_delete(node_t *node, void (*free_data)(void *))
+{
+    if (node)
+    {
+        if (node->left)
+            tree_delete(node->left, free_data);
+        if (node->right)
+            tree_delete(node->right, free_data);
+        if (free_data)
+            free_data(node->data);
+        free(node);
+    }
+}
+
+/**
+ * heap_delete - deletes heap
+ * @heap: heap to delete
+ * @free_data: function to delete nodes and symbols
+ */
+void heap_delete(heap_t *heap, void (*free_data)(void *))
+{
+    if (!heap)
+        return NULL;
+    tree_delete(heap->heapArr[1], free_data);
+}
