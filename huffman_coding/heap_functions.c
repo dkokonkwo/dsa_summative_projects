@@ -31,7 +31,7 @@ void sift_down(heap_t *heap)
             if (l_cmp <= 0 && r_cmp <= 0)
                 return;
             else
-                smaller = l_cmp < r_cmp ? l : l + 1;
+                smaller = l_cmp > r_cmp ? l : l + 1;
         }
         else
         {
@@ -86,14 +86,11 @@ void sift_up(heap_t *heap)
     while (parent >= 1)
     {
         cmp = heap->data_cmp(heap->heapArr[b]->data, heap->heapArr[parent]->data);
-        if (cmp < 0)
-        {
-            swap(heap->heapArr[parent]->data, heap->heapArr[b]->data);
-            b = parent;
-            parent = b / 2;
-        }
-        else
+        if (cmp >= 0)
             return;
+        swap(heap->heapArr[parent]->data, heap->heapArr[b]->data);
+        b = parent;
+        parent = b / 2;
     }
 }
 
