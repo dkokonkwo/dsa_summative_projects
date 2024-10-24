@@ -79,5 +79,6 @@ void trace_path(int target, int predecessor[]);
 int dijkstra_graph(graph_t *graph);
 int add_edge(graph_t *graph, size_t src, size_t dest, int weight);
 int is_connected(vertex_t *src, vertex_t *dest);
+void graph_delete(graph_t *graph);
 
 #endif

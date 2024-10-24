@@ -210,3 +210,32 @@ int dijkstra_graph(graph_t *graph)
 
     return 1;
 }
+
+/**
+ * graph_delete - delete vertices and graph
+ * @graph: pointer to graph to delete
+ */
+void graph_delete(graph_t *graph)
+{
+    vertex_t *current_vertex, *next_vertex;
+    edge_t *current_edge, *next_edge;
+    if (graph)
+    {
+        current_vertex = graph->head;
+        while (current_vertex)
+        {
+            current_edge = current_vertex->edges;
+            while (current_edge)
+            {
+                next_edge = current_edge->next;
+                free(current_edge);
+                current_edge = next_edge;
+            }
+
+            next_vertex = current_vertex->next;
+            free(current_vertex);
+            current_vertex = next_vertex;
+        }
+        free(graph);
+    }
+}

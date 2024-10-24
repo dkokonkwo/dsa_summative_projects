@@ -2,7 +2,6 @@
 
 // create options to run either dijkstra's or bellma-ford's algorithm
 // for dijkstra build a dikstra graph and find the shortest path for all node
-// for b-f build a be
 
 /**
  * display_menu - menu for finding the shortest path
@@ -10,10 +9,9 @@
 void display_menu(void)
 {
     printf("Find the Shortest Path.\n");
-    printf("To test either algorithm.\n");
-    printf("Type 1 find the shortest path using Dijkstra's algorithm.\n");
-    printf("Type 2 to find the shortest path using the updated Bellman-Ford algorithm.\n");
-    printf("Type 3 to exit the program.\n");
+    printf("1. Find the shortest path using Dijkstra's algorithm.\n");
+    printf("2. Find the shortest path using the Bellman-Ford algorithm.\n");
+    printf("3. Exit the program.\n");
 }
 
 /**
@@ -24,11 +22,20 @@ int main (void)
 {
     int status;
     graph_t *graph;
-    heap_t *priority_queue;
-    display_menu();
-    scanf("%d", status);
+    
+    
     while (1)
     {
+        display_menu();
+        printf("Enter your choice: ");
+        if (scanf("%d", &status) != 1)
+        {
+            fprintf(stderr, "Invalid input. Exiting...\n");
+            return 1;
+        }
+
+        while (getchar() != '\n');
+
         switch (status)
         {
         case 1:
@@ -41,13 +48,29 @@ int main (void)
             if (!dijkstra_graph(graph))
             {
                 fprintf(stderr, "Failed to find shortest path.\n");
-                graph_delete(graph);
             }
+            graph_delete(graph);
             break;
-
+        case 2:
+            graph = build_bellman_ford_graph();
+            if (!graph)
+            {
+                fprintf(stderr, "Failed to build graph\n");
+                break;
+            }
+            if (!bellman_ford_graph(graph))
+            {
+                fprintf(stderr, "Failed to find shortest path.\n");
+            }
+            graph_delete(graph);
+            break;
+        case 3:
+            printf("Exiting program...\n");
+            return 0;
         default:
+            printf("Invalid choice. Please select a valid option.\n");
             break;
         }
     }
-
+    return 1;
 }
