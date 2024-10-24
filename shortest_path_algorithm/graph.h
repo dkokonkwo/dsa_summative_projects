@@ -5,6 +5,7 @@
 #include <stdlib.h>
 #include <unistd.h>
 #include <limits.h>
+#include <stdint.h>
 
 typedef struct vertex_s vertex_t;
 
@@ -65,6 +66,7 @@ typedef struct heap_s
     size_t nb_vertices;
 } heap_t;
 
+/* heap functions */
 heap_t *heap_create(void);
 void swap(heap_t *heap, int p1, int p2);
 vertex_t *dequeue(heap_t *heap);
@@ -72,13 +74,20 @@ void sift_down(heap_t *heap);
 void enqueue(heap_t *heap, vertex_t *vertex);
 void sift_up(heap_t *heap);
 
-void dijkstra_traversal(heap_t *priority_queue, int predecessor[], vertex_t *start);
-vertex_t *add_vertex(graph_t *graph);
-graph_t *graph_create(void);
-void trace_path(int target, int predecessor[]);
-int dijkstra_graph(graph_t *graph);
+/* graph functions */
 int add_edge(graph_t *graph, size_t src, size_t dest, int weight);
 int is_connected(vertex_t *src, vertex_t *dest);
 void graph_delete(graph_t *graph);
+vertex_t *add_vertex(graph_t *graph);
+graph_t *graph_create(void);
+void trace_path(int target, size_t *predecessor);
+
+/* Dijkstra's algorithm functions */
+void dijkstra_traversal(heap_t *priority_queue, size_t *predecessor, int *visited, vertex_t *start);
+int dijkstra_graph(graph_t *graph);
+
+/* Bellman-Ford's algorithm functions */
+int bellman_ford_traversal(graph_t *graph, size_t *predecessor);
+int bellman_ford_graph(graph_t *graph);
 
 #endif
