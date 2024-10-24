@@ -72,4 +72,10 @@ void sift_down(heap_t *heap);
 void enqueue(heap_t *heap, vertex_t *vertex);
 void sift_up(heap_t *heap);
 
+void dijkstra_traversal(heap_t *priority_queue, int predecessor[], vertex_t *start);
+vertex_t *add_vertex(graph_t *graph);
+graph_t *graph_create(void);
+void trace_path(int target, int predecessor[]);
+int dijkstra_graph(graph_t *graph);
+
 #endif

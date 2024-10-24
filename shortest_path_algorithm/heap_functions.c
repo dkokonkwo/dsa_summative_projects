@@ -12,7 +12,7 @@ heap_t *heap_create(void)
         return NULL;
     heap->nb_vertices = 0;
     heap->size = 1;
-    arr = (vertex_t *)malloc(heap->size * sizeof(vertex_t *));
+    arr = (vertex_t **)malloc(heap->size * sizeof(vertex_t *));
     if (!arr)
         return NULL;
     heap->heapArr = arr;
@@ -62,16 +62,17 @@ void enqueue(heap_t *heap, vertex_t *vertex)
 {
     vertex_t *arr;
     if (!heap || !vertex)
-        return NULL;
+        return;
     /* resize array if full*/
     if (heap->size == heap->nb_vertices)
     {
-        arr = (vertex_t *)realloc(heap->heapArr, heap->size * 2 * sizeof(vertex_t *));
+        arr = realloc(heap->heapArr, heap->size * 2 * sizeof(vertex_t *));
         if (!arr)
         {
             printf("Could not expand array\n");
             return;
         }
+        heap->heapArr = arr;
         heap->size *= 2;
     }
     heap->heapArr[++heap->nb_vertices] = vertex;
@@ -132,7 +133,6 @@ vertex_t *dequeue(heap_t *heap)
         last = (int)heap->nb_vertices;
         swap(heap, last, 1);
         heap->heapArr[last] = NULL;
-        free(last);
         sift_down(heap);
     }
     heap->nb_vertices--;
