@@ -12,22 +12,34 @@ void dijkstra_traversal(heap_t *priority_queue, size_t *predecessor, int *visite
 {
     vertex_t *next;
     edge_t *edge;
+    int in_heap;
     if (!start)
         return;
     visited[start->index] = 1;
-    for (edge = start->edges; edge; edge = edge->next)
+    if (start->nb_edges)
     {
-        if (edge->dest->value > (start->value + edge->weight))
+        for (edge = start->edges; edge; edge = edge->next)
         {
-            edge->dest->value = start->value + edge->weight;
-            predecessor[edge->dest->index] = start->index;
-            if (!visited[edge->dest->index])
-                enqueue(priority_queue, edge->dest);
+            in_heap = edge->dest->value == INT_MAX ? 0 : 1;
+            if (edge->dest->value > (start->value + edge->weight))
+            {
+                edge->dest->value = start->value + edge->weight;
+                if (!visited[edge->dest->index])
+                    predecessor[edge->dest->index] = start->index;
+                if (!in_heap && !visited[edge->dest->index])
+                {
+                    enqueue(priority_queue, edge->dest);
+                }
+            }
         }
+        heap_sort(priority_queue);
+        print_queue(priority_queue);
     }
     next = dequeue(priority_queue);
     if (next)
+    {
         dijkstra_traversal(priority_queue, predecessor, visited, next);
+    }
 }
 
 /**
@@ -65,11 +77,13 @@ int dijkstra_graph(graph_t *graph)
 
     dijkstra_traversal(priority_queue, predecessor, visited, graph->head);
 
-    printf("Shortest paths:\n");
+    printf("Shortest paths: size: %lu\n", graph->nb_vertices);
     for (i = 0; i < graph->nb_vertices; i++)
     {
-        if (predecessor[i] != -1)
+        if (predecessor[i] != SIZE_MAX)
+        {
             trace_path(i, predecessor);
+        }
     }
     free(priority_queue->heapArr);
     free(priority_queue);

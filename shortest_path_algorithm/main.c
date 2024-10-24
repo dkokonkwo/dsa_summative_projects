@@ -22,8 +22,7 @@ int main (void)
 {
     int status;
     graph_t *graph;
-    
-    
+
     while (1)
     {
         display_menu();

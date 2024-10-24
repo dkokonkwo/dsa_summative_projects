@@ -53,8 +53,15 @@ int bellman_ford_graph(graph_t *graph)
     {
         has_update = bellman_ford_traversal(graph, predecessor);
         if (!has_update)
+        {
+            printf("No update\n");
             break;
-        sweep++;
+        }
+        else
+        {
+            printf("Has update\n");
+            sweep++;
+        }
     }
     if (sweep > 0 && sweep <= graph->nb_vertices - 1)
     {

@@ -1,6 +1,6 @@
 #include "graph.h"
 
-#define MAX_SIZE 50
+#define MAX_SIZE 20
 
 /**
  * graph_create - create new graph
@@ -138,23 +138,27 @@ int add_edge(graph_t *graph, size_t src, size_t dest, int weight)
  * @target: target vertex index
  * @predecessor: array of predecessors
  */
-void trace_path(int target, size_t *predecessor)
+void trace_path(size_t target, size_t *predecessor)
 {
-    int path[MAX_SIZE];
+    size_t path[MAX_SIZE];
     int count = 0;
-    int i, current = target;
-    while (predecessor[current] != SIZE_MAX)
+    size_t current = target;
+    int j;
+    while (current != SIZE_MAX)
     {
-        path[count] = predecessor[current];
+        path[count++] = current;
         current = predecessor[current];
-        count++;
     }
-    printf("%d", current);
-    for (i = count - 1; i >= 0; i--)
+    if (count == 1)
+        printf("Big error here!\n");
+    if (count > 1)
     {
-        printf(" --> %d", path[i]);
+        for (j = count - 1; j >= 1; j--)
+        {
+            printf("%lu --> ", path[j]);
+        }
+        printf("%lu\n", path[0]);
     }
-    printf("\n");
 }
 
 /**

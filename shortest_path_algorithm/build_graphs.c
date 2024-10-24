@@ -14,18 +14,15 @@ graph_t *build_dijkstra_graph(void)
 {
     graph_t *graph;
     vertex_t *vertex;
-    size_t i, src, dest;
-    int weight;
-
-    /* Seed random number generator */
-    srand(time(NULL));
-
+    size_t i;
+    int success;
+    
     graph = graph_create();
     if (!graph)
         return NULL;
-
-    /* Add 20 vertices to the graph */
-    for (i = 0; i < NUM_VERTICES; i++)
+    
+    // adding 6 vertices
+    for (i = 0; i < 6; i++)
     {
         vertex = add_vertex(graph);
         if (!vertex)
@@ -34,27 +31,22 @@ graph_t *build_dijkstra_graph(void)
             return NULL;
         }
     }
-
-    /* Add 15 random unidirectional edges between vertices with random weights */
-    for (i = 0; i < NUM_EDGES; i++)
-    {
-        /* Randomly pick two different vertices */
-        src = rand() % NUM_VERTICES;
-        dest = rand() % NUM_VERTICES;
-        while (dest == src)
-        {
-            dest = rand() % NUM_VERTICES;
-        }
-
-        /* Generate a random weight between 1 and MAX_WEIGHT */
-        weight = (rand() % MAX_WEIGHT) + 1;
-
-        if (!add_edge(graph, src, dest, weight))
-        {
-            printf("Failed to add edge between vertex %zu and vertex %zu\n", src, dest);
-        }
-    }
-
+    
+    // adding edges
+    success = add_edge(graph, 0, 2, 35);
+    success &= add_edge(graph, 0, 1, 5);
+    success &= add_edge(graph, 0, 3, 40);
+    success &= add_edge(graph, 1, 3, 20);
+    success &= add_edge(graph, 1, 4, 25);
+    success &= add_edge(graph, 2, 5, 30);
+    success &= add_edge(graph, 2, 4, 30);
+    success &= add_edge(graph, 3, 5, 20);
+    success &= add_edge(graph, 4, 5, 25);
+    success &= add_edge(graph, 4, 3, 45);
+    if (!success)
+        printf("adding edges went wrong.\n");
+    else
+        printf("Created graph with %lu vertices\n", graph->nb_vertices);
     return graph;
 }
 
