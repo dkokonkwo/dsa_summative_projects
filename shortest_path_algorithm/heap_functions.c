@@ -155,7 +155,6 @@ vertex_t *dequeue(heap_t *heap)
     if (heap->nb_vertices == 1)
     {
         heap->heapArr[1] = NULL;
-        printf("Last one\n");
         return v;
     }
     last = (int)heap->nb_vertices;

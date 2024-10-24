@@ -33,13 +33,10 @@ void dijkstra_traversal(heap_t *priority_queue, size_t *predecessor, int *visite
             }
         }
         heap_sort(priority_queue);
-        print_queue(priority_queue);
     }
     next = dequeue(priority_queue);
     if (next)
-    {
         dijkstra_traversal(priority_queue, predecessor, visited, next);
-    }
 }
 
 /**
@@ -89,6 +86,5 @@ int dijkstra_graph(graph_t *graph)
     free(priority_queue);
     free(visited);
     free(predecessor);
-
     return 1;
 }
