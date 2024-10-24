@@ -135,28 +135,29 @@ int add_edge(graph_t *graph, size_t src, size_t dest, int weight)
  * dijkstra_traversal - traverses through graph
  * @priority_queue: priority queue
  * @predecessor: array of predecessor
+ * @visited: keeps track of visited vertices
  * @start: current vertex / beginning vertex
  */
-void dijkstra_traversal(heap_t *priority_queue, int predecessor[], vertex_t *start)
+void dijkstra_traversal(heap_t *priority_queue, int predecessor[], int *visited, vertex_t *start)
 {
     vertex_t *next;
     edge_t *edge;
     if (!start)
         return;
-    if (start->nb_edges == 0)
-        return;
+    visited[start->index] = 1;
     for (edge = start->edges; edge; edge = edge->next)
     {
         if (edge->dest->value > (start->value + edge->weight))
         {
             edge->dest->value = start->value + edge->weight;
             predecessor[edge->dest->index] = start->index;
-            enqueue(priority_queue, edge->dest);
+            if (!visited[edge->dest->index])
+                enqueue(priority_queue, edge->dest);
         }
     }
     next = dequeue(priority_queue);
     if (next)
-        dijkstra_traversal(priority_queue, predecessor, next);
+        dijkstra_traversal(priority_queue, predecessor, visited, next);
 }
 
 /**
@@ -195,10 +196,14 @@ int dijkstra_graph(graph_t *graph)
         return 0;
     heap_t *priority_queue = heap_create();
     int predecessor[graph->nb_vertices];
+    int *visited = malloc(graph->nb_vertices * sizeof(int));
     for (i = 0; i < graph->nb_vertices; i++)
+    {
         predecessor[i] = -1;
+        visited[i] = 0;
+    }
     graph->head->value = 0;
-    dijkstra_traversal(priority_queue, predecessor, graph->head);
+    dijkstra_traversal(priority_queue, predecessor, visited, graph->head);
     printf("Shortest paths:\n");
     for (i = 0; i < graph->nb_vertices; i++)
     {
