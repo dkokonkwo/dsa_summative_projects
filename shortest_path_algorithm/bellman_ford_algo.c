@@ -72,7 +72,7 @@ int bellman_ford_graph(graph_t *graph)
                 trace_path(i, predecessor);
         }
     }
-    if (sweep >= graph->nb_vertices)
+    else if (sweep >= graph->nb_vertices)
     {
         fprintf(stderr, "Graph contains a negative weight cycle.\n");
         free(predecessor);
