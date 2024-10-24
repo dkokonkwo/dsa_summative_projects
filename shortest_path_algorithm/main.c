@@ -25,7 +25,6 @@ int main (void)
     int status;
     graph_t *graph;
     heap_t *priority_queue;
-    int predecessors[];
     display_menu();
     scanf("%d", status);
     while (1)
@@ -34,7 +33,16 @@ int main (void)
         {
         case 1:
             graph = build_dijkstra_graph();
-            if (!)
+            if (!graph)
+            {
+                fprintf(stderr, "Failed to build graph\n");
+                break;
+            }
+            if (!dijkstra_graph(graph))
+            {
+                fprintf(stderr, "Failed to find shortest path.\n");
+                graph_delete(graph);
+            }
             break;
 
         default:

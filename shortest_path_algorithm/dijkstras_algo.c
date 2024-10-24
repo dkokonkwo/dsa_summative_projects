@@ -50,6 +50,88 @@ vertex_t *add_vertex(graph_t *graph)
 }
 
 /**
+ * is_connected - finds out if two vertices are connected
+ * @src: first vertex
+ * @dest: second vertex
+ * Return: 1 if connected, 0 if not connected, -1 if valid input
+ */
+int is_connected(vertex_t *src, vertex_t *dest)
+{
+    edge_t *curr;
+    if (!src || !dest)
+        return -1;
+    for (curr = src->edges; curr; curr = curr->next)
+    {
+        if (curr->dest == dest)
+            return 1;
+    }
+    return 0;
+}
+
+/**
+ * find_vertex - find vertex in graph that matches with index
+ * @graph: pointer to graph
+ * @index: vertex index
+ * Return: pointer to member vertex if found else NULL
+ */
+vertex_t *find_vertex(graph_t *graph, size_t index)
+{
+    vertex_t *curr;
+    if (!graph)
+        return NULL;
+    for (curr = graph->head; curr; curr = curr->next)
+    {
+        if (curr->index == index)
+            return curr;
+    }
+    return NULL;
+}
+
+/**
+ * add_edge - creates connection between to vertices
+ * @graph: pointer to graph
+ * @src: source vertex index 
+ * @dest: destination vertex index
+ * @weight: edge weight
+ * Return: 1 on sucess else 0 on failure
+ */
+int add_edge(graph_t *graph, size_t src, size_t dest, int weight)
+{
+    vertex_t *src_v, *dest_v;
+    edge_t *edge, *curr_edge;
+    if (!graph)
+        return 0;
+    src_v = find_vertex(graph, src);
+    dest_v = find_vertex(graph, dest);
+    if (!(src_v && dest_v))
+        return 0;
+    if (is_connected(src_v, dest_v) == 1)
+    {
+        printf("Vertices are already connected.\n");
+        return 1;
+    }
+    edge = (edge_t *)malloc(sizeof(edge_t));
+    if (!edge)
+        return 0;
+    /*source to destination edge*/
+    edge->dest = dest_v;
+    edge->next = NULL;
+    edge->weight = weight;
+    if (!src_v->edges)
+        src_v->edges = edge;
+    else
+    {
+        for (curr_edge = src_v->edges; curr_edge->next; curr_edge = curr_edge->next)
+        {
+            ;
+        }
+        curr_edge->next = edge;
+    }
+    src_v->nb_edges++;
+    return 1;
+}
+
+/**
  * dijkstra_traversal - traverses through graph
  * @priority_queue: priority queue
  * @predecessor: array of predecessor

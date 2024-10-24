@@ -77,5 +77,7 @@ vertex_t *add_vertex(graph_t *graph);
 graph_t *graph_create(void);
 void trace_path(int target, int predecessor[]);
 int dijkstra_graph(graph_t *graph);
+int add_edge(graph_t *graph, size_t src, size_t dest, int weight);
+int is_connected(vertex_t *src, vertex_t *dest);
 
 #endif
