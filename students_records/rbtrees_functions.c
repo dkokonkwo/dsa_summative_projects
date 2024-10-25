@@ -26,7 +26,7 @@ void inorder_traversal(node_t *node)
     if (!node)
         return;
     inorder_traversal(node->left);
-    printf("ID: %d, Name: %s, Grade: %d\n", node->ID, node->name, node->grade);
+    printf("ID: %d, Name: %s, Grade: %c\n", node->ID, node->name, node->grade);
     inorder_traversal(node->right);
 }
 
@@ -84,7 +84,7 @@ void insert_fix(rb_tree_t *tree, node_t *node)
         else
         {
             temp = node->parent->parent->right;
-            if (temp->color == 1)
+            if (temp && temp->color == 1)
             {
                 temp->color = 0;
                 node->parent->color = 0;
@@ -137,6 +137,12 @@ int insert(rb_tree_t *tree, int ID, char *name, char grade)
     node->ID = ID;
     node->grade = grade;
     node->color = 1;
+    if (!tree->root)
+    {
+        tree->root = node;
+        tree->size++;
+        return 1;
+    }
     x = tree->root;
     while (x)
     {
@@ -177,7 +183,8 @@ void rb_transplant(rb_tree_t *tree, node_t *n1, node_t *n2)
         n1->parent->left = n2;
     else
         n1->parent->right = n2;
-    n2->parent = n1->parent;
+    if (n2)
+        n2->parent = n1->parent;
 }
 
 
@@ -320,6 +327,7 @@ int delete_node(rb_tree_t *tree, node_t *node, char *name)
     free_node(z);
     if (y_original_color == 0 && x)
         delete_fix(tree, x);
+    return 1;
 }
 
 /**
@@ -459,12 +467,12 @@ rb_tree_t *build_tree(void)
         "Ava Mitchell",
         "Alexander Hall"};
 
-    char *grades[] = {
-        "A", "B", "C", "D",
-        "A", "B", "C", "D",
-        "A", "B", "C", "D",
-        "A", "B", "C", "D",
-        "A", "B"};
+     char grades[] = {
+        'A', 'B', 'C', 'D', 'A',
+        'B', 'C', 'D', 'A', 'B',
+        'C', 'D', 'A', 'B', 'C',
+        'D', 'A', 'B', 'C', 'D'};
+
 
     int ids[] = {
         1234, 5678, 4321, 8765,

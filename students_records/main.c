@@ -1,6 +1,10 @@
 #include "rbtrees.h"
 
 // create tree, add, delete, search for student
+
+int add_student_record(rb_tree_t *system);
+int delete_student_record(rb_tree_t *system);
+
 /**
  * display_menu - user input menu
  */
@@ -11,7 +15,8 @@ void display_menu(void)
     printf("1. Add student record to system\n");
     printf("2. Delete student record from system\n");
     printf("3. Search for student record in system\n");
-    printf("4. Exit program\n");
+    printf("4. Display all students records\n");
+    printf("5. Exit program\n");
 }
 
 /**
@@ -34,6 +39,8 @@ int main(void)
         if (scanf("%d", &status) != 1)
         {
             fprintf(stderr, "Invalid input. Exiting...\n");
+            free_tree(system->root);
+            free(system);
             return 1;
         }
 
@@ -59,8 +66,11 @@ int main(void)
             inorder_traversal(system->root);
             break;
         case 4:
+            inorder_traversal(system->root);
+            break;
+        case 5:
             printf("Exiting program...\n");
-            free_tree(system);
+            free_tree(system->root);
             free(system);
             return 0;
         default:
@@ -68,4 +78,19 @@ int main(void)
             break;
         }
     }
+}
+
+
+int add_student_record(rb_tree_t *system)
+{
+    if (system)
+        return 1;
+    return 0;
+}
+
+int delete_student_record(rb_tree_t *system)
+{
+    if (system)
+        return 1;
+    return 0;
 }
