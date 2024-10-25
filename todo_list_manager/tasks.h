@@ -13,7 +13,7 @@
  * @prev: pointer to previous task
  * @next: pointer to next task
  */
-typdef struct listNode
+typedef struct listNode
 {
     char *desc;
     int ID;
@@ -25,13 +25,12 @@ typdef struct listNode
  * @nb_tasks: number of tasks in todoList
  * @head: first task in todoList
  */
-typdef struct todoList
+typedef struct todoList
 {
     int nb_tasks;
     listNode *head;
     listNode *tail;
-} todoList
-
+} todoList;
 
 todoList *create_todo_list(void);
 listNode *add_task(todoList *todo_list, char *desc);

@@ -14,7 +14,7 @@ int main(void)
         return 1;
     }
 
-    int choice, task_id;
+    int choice, task_id, del_id;
     char task_desc[256];
 
     while (1)
@@ -64,13 +64,31 @@ int main(void)
                     printf("Task with ID %d not found.\n", task_id);
                 }
                 break;
-
+            
             case 3:
+                printf("Enter the ID of completed task\n");
+                if (scanf("%d", &del_id) != 1)
+                {
+                    printf("Invalid input. Please enter a valid task ID.\n");
+                    while (getchar() != '\n');
+                    continue;
+                }
+                if (delete_task(my_todo_list, del_id))
+                {
+                    printf("Task complete! Well done.\n");
+                }
+                else
+                {
+                    printf("Task with ID %d not found.\n", del_id);
+                }
+                break;
+
+            case 4:
                 printf("\nTo-Do List:\n");
                 display_tasks(my_todo_list);
                 break;
 
-            case 4:
+            case 5:
                 printf("Exiting the to-do list program. Goodbye!\n");
                 delete_list(my_todo_list);
                 return 0;
@@ -90,7 +108,8 @@ void show_menu(void)
 {
     printf("\nTo-Do List Menu:\n");
     printf("1. Add a task\n");
-    printf("2. Delete a completed task\n");
-    printf("3. Display all tasks\n");
-    printf("4. Exit\n");
+    printf("2. Delete a task\n");
+    printf("3. Mark task as completed\n");
+    printf("4. Display all tasks\n");
+    printf("5. Exit\n");
 }

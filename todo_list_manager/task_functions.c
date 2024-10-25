@@ -57,6 +57,7 @@ listNode *add_task(todoList *todo_list, char *desc)
  */
 int delete_task(todoList *todo_list, int ID)
 {
+    int i;
     if (!todo_list || ID <= 0)
         return 0;
     listNode *curr, *prev = NULL;
@@ -72,10 +73,16 @@ int delete_task(todoList *todo_list, int ID)
                 todo_list->tail = prev;
             free(curr->desc);
             free(curr);
+            todo_list->nb_tasks--;
+            /* renumber ID's */
+            i = 0;
+            for (curr = todo_list->head; curr; curr = curr->next)
+                curr->ID = ++i;
             return 1;
         }
         prev = curr;
     }
+    
     return 0;
 }
 

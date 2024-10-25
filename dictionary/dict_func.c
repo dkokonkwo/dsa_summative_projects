@@ -120,6 +120,8 @@ void disp_dict(node_t *root)
 {
     if (!root)
         return;
+    if (!root->word)
+        return;
     disp_dict(root->left);
     printf("%s\n", root->word);
     disp_dict(root->right);
@@ -142,6 +144,7 @@ void swap(node_t *node1, node_t* node2)
 
     node2->word = temp_word;
     node2->def = temp_def;
+    node2->index = temp_index;
 }
 
 /**
@@ -185,7 +188,7 @@ void del_dict(dict_t *dict)
 {
     if (!dict || !dict->root)
         return;
-    del_dict_node(dict->root);
+    del_dict_nodes(dict->root);
     free(dict);
 }
 
