@@ -29,7 +29,7 @@ int main(void)
         return 1;
     }
 
-    printf("Enter the name of the criminal (case-sensitive): ");
+    printf("Enter the name of the criminal (case-insensitive): ");
     if (!fgets(criminal_name, sizeof(criminal_name), stdin))
     {
         printf("Error: Invalid input.\n");
