@@ -50,5 +50,7 @@ node_t *search_tree(node_t *node, int ID);
 void inorder_traversal(node_t *node);
 rb_tree_t *rb_tree_create(void);
 void free_node(node_t *node);
+void free_tree(node_t *root);
+rb_tree_t *build_tree(void);
 
 #endif

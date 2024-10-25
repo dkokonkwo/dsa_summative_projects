@@ -159,6 +159,7 @@ int insert(rb_tree_t *tree, int ID, char *name, char grade)
     if (node->parent->parent == NULL)
         return 1;
     insert_fix(tree, node);
+    tree->size++;
     return 1;
 }
 
@@ -317,7 +318,7 @@ int delete_node(rb_tree_t *tree, node_t *node, char *name)
         y->color = z->color;
     }
     free_node(z);
-    if (y_original_color == 0)
+    if (y_original_color == 0 && x)
         delete_fix(tree, x);
 }
 
@@ -410,4 +411,77 @@ void free_node(node_t *node)
         free(node->name);
         free(node);
     }
+}
+
+/**
+ * free_tree - frees nodes in a tree
+ * @root: pointer root node
+ */
+void free_tree(node_t *root)
+{
+    if (!root)
+        return;
+    free_tree(root->left);
+    free_tree(root->right);
+    free_node(root);
+}
+
+
+/**
+ * build_tree - build a red black tree
+ * Returns pointer to tree
+ */
+rb_tree_t *build_tree(void)
+{
+    rb_tree_t *tree = (rb_tree_t *)malloc(sizeof(rb_tree_t));
+    if (!tree)
+        return NULL;
+    int i, size = 20;
+    char *names[] = {
+        "Alice Bennett",
+        "Marcus Carter",
+        "Isabella Diaz",
+        "Henry Foster",
+        "Chloe Grant",
+        "Benjamin Hayes",
+        "Olivia Jenkins",
+        "Daniel King",
+        "Emily Lewis",
+        "Jack Miller",
+        "Mia Parker",
+        "Ethan Roberts",
+        "Sophie Turner",
+        "Lucas White",
+        "Grace Young",
+        "Liam Walker",
+        "Charlotte Campbell",
+        "James Wilson",
+        "Ava Mitchell",
+        "Alexander Hall"};
+
+    char *grades[] = {
+        "A", "B", "C", "D",
+        "A", "B", "C", "D",
+        "A", "B", "C", "D",
+        "A", "B", "C", "D",
+        "A", "B"};
+
+    int ids[] = {
+        1234, 5678, 4321, 8765,
+        3456, 7890, 2345, 6789,
+        4567, 8901, 5432, 9876,
+        3452, 7623, 4918, 8529,
+        6712, 9034, 1204, 8932};
+    
+    for (i = 0; i < size; i++)
+    {
+        if (!insert(tree, ids[i], names[i], grades[i]))
+        {
+            free_tree(tree->root);
+            free(tree);
+            return NULL;
+        }
+    }
+    printf("System online!\n");
+    return tree;
 }

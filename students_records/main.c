@@ -60,9 +60,11 @@ int main(void)
             break;
         case 4:
             printf("Exiting program...\n");
-            tree_delete(system);
+            free_tree(system);
+            free(system);
             return 0;
         default:
+            printf("Invalid choice. Please select a valid option.\n");
             break;
         }
     }
