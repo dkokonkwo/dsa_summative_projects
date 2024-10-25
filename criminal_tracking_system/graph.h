@@ -57,7 +57,7 @@ typedef struct queue_s
 {
     size_t nb_nodes;
     node_t *head;
-    node_t *tail
+    node_t *tail;
 } queue_t;
 
 /* queue_functions.c  */
@@ -72,5 +72,7 @@ vertex_t *search_member(graph_t *network, char *name);
 int create_connection(graph_t *network, char *src, char *dest);
 int bfs_traverse(graph_t *network, vertex_t *criminal);
 void network_delete(graph_t *network);
+int build_network(graph_t *network);
+int is_connected(vertex_t *src, vertex_t *dest);
 
 #endif

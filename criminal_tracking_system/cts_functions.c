@@ -172,13 +172,11 @@ int bfs_traverse(graph_t *network, vertex_t *criminal)
     {
         member = dequeue(queue);
         if (current_depth == 0)
-        {
+            printf("Prime Suspect: %s", member->name);
+        else if (current_depth == 1)
             printf("Name: %s Category: Direct Contact\n", member->name);
-        }
         else
-        {
-            printf("Name: %s Category: Level %lu", member->name, current_depth);
-        }
+            printf("Name: %s Category: Level %lu\n", member->name, current_depth);
         for (edge = member->first; edge; edge = edge->next)
         {
             if (!visited[edge->dest->index])
@@ -264,7 +262,7 @@ int build_network(graph_t *network)
         }
         printf("Adding %s to network...\n", members[i]);
     }
-    conn &= create_connection(network, members[0], members[1]);
+    conn = create_connection(network, members[0], members[1]);
     conn &= create_connection(network, members[0], members[2]);
     conn &= create_connection(network, members[1], members[7]);
     conn &= create_connection(network, members[5], members[12]);
