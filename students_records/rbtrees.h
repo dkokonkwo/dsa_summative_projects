@@ -37,4 +37,18 @@ typedef struct rb_tree_s
     int size;
 } rb_tree_t;
 
+void right_rotate(rb_tree_t *tree, node_t *node);
+void left_rotate(rb_tree_t *tree, node_t *node);
+node_t *maximum(node_t *node);
+node_t *minimum(node_t *node);
+int delete_node(rb_tree_t *tree, node_t *node, char *name);
+void delete_fix(rb_tree_t *tree, node_t *node);
+void rb_transplant(rb_tree_t *tree, node_t *n1, node_t *n2);
+int insert(rb_tree_t *tree, int ID, char *name, char grade);
+void insert_fix(rb_tree_t *tree, node_t *node);
+node_t *search_tree(node_t *node, int ID);
+void inorder_traversal(node_t *node);
+rb_tree_t *rb_tree_create(void);
+void free_node(node_t *node);
+
 #endif
