@@ -6,7 +6,7 @@
  * @freq_arr: array of corresponding frequencies
  * @size: size of both arrays
  * Return: priority queue heap or NULL on failure
- */
+ */ 
 heap_t *create_priority_queue(char *sym_arr, int *freq_arr, int size)
 {
     heap_t *priority_queue;
@@ -68,18 +68,17 @@ void free_nested(void *data)
  * @sym_arr: array of symbols
  * @freq_arr: array of frequencies
  * @size: size of arrays
- * Return: pointer to root node of huffman tree or NULL on failure
+ * Return: pointer to priorty queue of huffman tree or NULL on failure
  */
-node_t *build_huffman_tree(char *sym_arr, int *freq_arr, int size)
+heap_t *build_huffman_tree(char *sym_arr, int *freq_arr, int size)
 {
     heap_t *priority_queue;
-    node_t *huffman_root;
     if (!sym_arr || !freq_arr || size < 1)
         return NULL;
     priority_queue = create_priority_queue(sym_arr, freq_arr, size);
     if (!priority_queue)
         return NULL;
-    while (priority_queue->size > 1)
+    while (priority_queue->nb_nodes > 1)
     {
         if (!extract_and_insert(priority_queue))
         {
@@ -87,6 +86,49 @@ node_t *build_huffman_tree(char *sym_arr, int *freq_arr, int size)
             return NULL;
         }
     }
-    huffman_root = (node_t *)(priority_queue->heapArr[1]);
-    heap_delete(priority_queue, NULL);
+    return priority_queue;
+}
+
+
+void print_tree(node_t *root)
+{
+    char dol;
+    symbol_t *sym;
+    if (!root)
+        return;
+    sym = (symbol_t *)root->data;
+    if (sym->data == -1)
+        dol = '$';
+    else
+        dol = sym->data;
+    printf("%c, %d\n", dol, sym->freq);
+    print_tree(root->left);
+    print_tree(root->right);
+}
+
+void huffman_code(node_t *root, char *code, int level)
+{
+    symbol_t *sym;
+    char *code_next;
+    if (!root)
+        return;
+    /* leaf node */
+    if (!root->left && !root->right)
+    {
+        sym = (symbol_t *)root->data;
+        printf("%c: %s\n", sym->data, code);
+        return;
+    }
+    if (root->left)
+    {
+        code_next = strdup(code);
+        code_next[level] = '0';
+        huffman_code(root->left, code_next, level + 1);
+    }
+    if (root->right)
+    {
+        code_next = strdup(code);
+        code_next[level] = '1';
+        huffman_code(root->right, code_next, level + 1);
+    }
 }

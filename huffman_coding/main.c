@@ -47,12 +47,22 @@ void get_sym_freq_arr(FILE *file, char chars[], int freq[], int *count)
 
 int main(int argc, char *argv[])
 {
+    node_t *node;
+    heap_t *priority_queue;
     if (argc != 3)
     {
-        printf("Usage: %s <filename> <compress/decompress>\n");
+        printf("Usage: %s <filename> <compress>\n", argv[0]);
         return 1;
     }
-    FILE *file = fopen(argv[2], "r");
+
+    char algo = argv[2][0];
+    if (algo != 'c')
+    {
+        printf("Usage: %s <filename> <compress>\n", argv[0]);
+        return 1;
+    }
+
+    FILE *file = fopen(argv[1], "r");
     if (!file)
     {
         printf("Error opening file!\n");
@@ -67,10 +77,33 @@ int main(int argc, char *argv[])
 
     fclose(file);
 
+    printf("%d\n", count);
+
     printf("Character Frequency\n");
     for (int i = 0; i < count; i++) {
         printf("'%c' : %d\n", characters[i], frequencies[i]);
     }
+
+    char *code = malloc(100 * sizeof(char));
+    if (!code)
+    {
+        printf("Memory allocation error!\n");
+        return 1;
+    }
+    int level = 0;
+
+    priority_queue = build_huffman_tree(characters, frequencies, count);
+    node = (node_t *)priority_queue->heapArr[1]->data;
+
+    printf("\tTree:\n");
+    print_tree(node);
+    printf("\n\tHuffman codes:\n");
+    huffman_code(node, code, level);
+    printf("%d\n", level);
+
+    free_nested(node);
+    heap_delete(priority_queue, NULL);
+    free(code);
 
     return 0;
 }

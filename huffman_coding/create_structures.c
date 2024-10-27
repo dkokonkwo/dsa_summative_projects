@@ -11,16 +11,17 @@ heap_t *create_heap(int (*data_cmp)(void *, void *), int size)
     node_t **heapArr;
     if (!data_cmp)
         return NULL;
-    if (size < 1)
-    {
-        printf("size of array cannot be less than one.\n");
-        return NULL;
-    }
     heap_t *minHeap = (heap_t *)malloc(sizeof(heap_t));
     if (!minHeap)
         return NULL;
-    heapArr = calloc(size + 1, sizeof(node_t *));
-    minHeap->size = 0;
+    heapArr = (node_t **)malloc((size + 1) * sizeof(node_t *));
+    if (!heapArr)
+    {
+        free(minHeap);
+        return NULL;
+    }
+    minHeap->nb_nodes = 0;
+    minHeap->size = size + 1;
     minHeap->data_cmp = data_cmp;
     minHeap->heapArr = heapArr;
     return minHeap;
@@ -52,7 +53,7 @@ node_t *create_node(node_t *parent, void *data)
  * @freq: symbol frequency
  * Return: pointer to symbol or NULL on failure
  */
-symbol_t *create_symbol(char *s, int freq)
+symbol_t *create_symbol(char s, int freq)
 {
     if (!s || freq < 1)
         return NULL;
@@ -74,11 +75,9 @@ int freq_cmp(void *a, void *b)
 {
     node_t *n1, *n2;
     int f1, f2;
-    if (!a || !b)
-        return NULL;
     n1 = (node_t *) a;
     n2 = (node_t *) b;
-    f1 = ((symbol_t *) n1->data)->freq;
-    f2 = ((symbol_t *) n2->data)->freq;
+    f1 = ((symbol_t *)n1->data)->freq;
+    f2 = ((symbol_t *)n2->data)->freq;
     return f1 - f2;
 }

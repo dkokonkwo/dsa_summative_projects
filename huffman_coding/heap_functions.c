@@ -5,12 +5,12 @@
  * @a: pointer 1
  * @b: pointer 2
  */
-void swap(void *a, void *b)
+void swap(heap_t *heap, int a, int b)
 {
-    void *c;
-    c = a;
-    a = b;
-    b = c;
+    void *temp;
+    temp = heap->heapArr[a]->data;
+    heap->heapArr[a]->data = heap->heapArr[b]->data;
+    heap->heapArr[b]->data = temp;
 }
 
 /**
@@ -22,16 +22,16 @@ void sift_down(heap_t *heap)
     int l, i, l_cmp, r_cmp, smaller;
     i = 1;
     l = i * 2;
-    while (l + 1 <= heap->size || l <= heap->size)
+    while (l <= heap->nb_nodes)
     {
         l_cmp = heap->data_cmp(heap->heapArr[i]->data, heap->heapArr[l]->data);
-        if (l + 1 <= heap->size)
+        if (l + 1 <= heap->nb_nodes)
         {
             r_cmp = heap->data_cmp(heap->heapArr[i]->data, heap->heapArr[l + 1]->data);
             if (l_cmp <= 0 && r_cmp <= 0)
                 return;
             else
-                smaller = l_cmp > r_cmp ? l : l + 1;
+                smaller = l_cmp > r_cmp ? l : (l + 1);
         }
         else
         {
@@ -39,8 +39,9 @@ void sift_down(heap_t *heap)
                 return;
             smaller = l;
         }
-        swap(heap->heapArr[i]->data, heap->heapArr[smaller]->data);
+        swap(heap, i, smaller);
         i = smaller;
+        l = i * 2;
     }
 }
 
@@ -51,26 +52,24 @@ void sift_down(heap_t *heap)
  */
 void *heap_extract(heap_t *heap)
 {
-    node_t *bottom, *top;
+    node_t *top;
     void *data;
     if (!heap)
         return NULL;
-    if (!heap->size)
+    if (!heap->nb_nodes)
         return NULL;
     top = heap->heapArr[1];
     data = top->data;
-    if (heap->size == 1)
+    if (heap->nb_nodes == 1)
     {
         free(heap->heapArr[1]);
         heap->heapArr[1] = NULL;
-        heap->size--;
+        heap->nb_nodes--;
         return data;
     }
-    bottom = heap->heapArr[heap->size];
-    swap(bottom->data, heap->heapArr[1]->data);
-    free(bottom);
-    heap->heapArr[heap->size] = NULL;
-    heap->size--;
+    swap(heap, heap->nb_nodes, 1);
+    heap->heapArr[heap->nb_nodes] = NULL;
+    heap->nb_nodes--;
     sift_down(heap);
     return data;
 }
@@ -81,16 +80,16 @@ void *heap_extract(heap_t *heap)
  */
 void sift_up(heap_t *heap)
 {
-    int cmp, b = heap->size;
-    int parent = b / 2;
+    int cmp, child = heap->nb_nodes;
+    int parent = child / 2;
     while (parent >= 1)
-    {
-        cmp = heap->data_cmp(heap->heapArr[b]->data, heap->heapArr[parent]->data);
+    { 
+        cmp = heap->data_cmp(heap->heapArr[child]->data, heap->heapArr[parent]->data);
         if (cmp >= 0)
             return;
-        swap(heap->heapArr[parent]->data, heap->heapArr[b]->data);
-        b = parent;
-        parent = b / 2;
+        swap(heap, parent, child);
+        child = parent;
+        parent = child / 2;
     }
 }
 
@@ -103,20 +102,21 @@ void sift_up(heap_t *heap)
 node_t *heap_insert(heap_t *heap, void *data)
 {
     node_t *new_node;
+    int parent = (heap->nb_nodes + 1) / 2;
     if (!heap || !data)
         return NULL;
-    if (heap->size = 0)
+    if (heap->nb_nodes == 0)
     {
         new_node = create_node(NULL, data);
         if (!new_node)
             return NULL;
-        heap->heapArr[++heap->size] = new_node;
+        heap->heapArr[++heap->nb_nodes] = new_node;
         return new_node;
     }
-    new_node = create_node(heap->heapArr[heap->size], data);
+    new_node = create_node(heap->heapArr[parent], data);
     if (!new_node)
         return NULL;
-    heap->heapArr[++heap->size] = new_node;
+    heap->heapArr[++heap->nb_nodes] = new_node;
     sift_up(heap);
     return new_node;
 }
@@ -131,7 +131,7 @@ node_t *extract_and_insert(heap_t *heap)
     node_t *left, *right, *new_node;
     symbol_t *new_symbol;
     int new_freq;
-    if (!heap || !heap->size)
+    if (!heap || !heap->nb_nodes)
         return NULL;
     left = (node_t *)heap_extract(heap);
     if (!left)
@@ -159,7 +159,7 @@ node_t *extract_and_insert(heap_t *heap)
         return NULL;
     }
     new_node->left = left;
-    new_node->right = right;
+    new_node->right = right; 
     heap_insert(heap, new_node);
     return new_node;
 }
@@ -191,6 +191,6 @@ void tree_delete(node_t *node, void (*free_data)(void *))
 void heap_delete(heap_t *heap, void (*free_data)(void *))
 {
     if (!heap)
-        return NULL;
+        return;
     tree_delete(heap->heapArr[1], free_data);
 }
