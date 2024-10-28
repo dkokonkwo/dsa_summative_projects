@@ -51,14 +51,14 @@ int main(int argc, char *argv[])
     heap_t *priority_queue;
     if (argc != 3)
     {
-        printf("Usage: %s <filename> <compress>\n", argv[0]);
+        printf("Usage: %s <filename> <compress>|<decompress>\n", argv[0]);
         return 1;
     }
 
     char algo = argv[2][0];
-    if (algo != 'c')
+    if (algo != 'c' || algo != 'd')
     {
-        printf("Usage: %s <filename> <compress>\n", argv[0]);
+        printf("Usage: %s <filename> <compress>|<decompress>\n", argv[0]);
         return 1;
     }
 
