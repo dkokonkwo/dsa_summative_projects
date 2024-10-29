@@ -43,12 +43,12 @@ int main(void)
         {
             case 1:
                 printf("Enter the word: ");
-                fgets(word, sizeof(word), stdin);
-                word[strcspn(word, "\n")] = '\0';
+                scanf(" %[^\n]s", word);
+                while (getchar() != '\n');
 
                 printf("Enter the definition: ");
-                fgets(def, sizeof(def), stdin);
-                def[strcspn(def, "\n")] = '\0';
+                scanf(" %[^\n]s", def);
+                while (getchar() != '\n');
 
                 if (add_word(dictionary, word, def))
                     printf("Word added successfully!\n");
@@ -58,13 +58,14 @@ int main(void)
 
             case 2:
                 printf("Enter the word to delete: ");
-                fgets(word, sizeof(word), stdin);
-                word[strcspn(word, "\n")] = '\0';
+                scanf(" %[^\n]s", word);
+                while (getchar() != '\n');
 
                 node_t *word_to_delete = search_word(dictionary, word);
                 if (word_to_delete)
                 {
-                    del_word(dictionary, word_to_delete);
+                    dictionary->root = del_word(dictionary->root, word);
+                    dictionary->nb_words--;
                     printf("Word deleted successfully!\n");
                 }
                 else
@@ -75,8 +76,8 @@ int main(void)
 
             case 3:
                 printf("Enter the word to search: ");
-                fgets(word, sizeof(word), stdin);
-                word[strcspn(word, "\n")] = '\0';
+                scanf(" %[^\n]s", word);
+                while (getchar() != '\n');
 
                 node_t *search_result = search_word(dictionary, word);
                 if (search_result)
@@ -98,6 +99,7 @@ int main(void)
 
             default:
                 printf("Invalid choice. Please try again.\n");
+                while (getchar() != '\n');
                 break;
         }
     }

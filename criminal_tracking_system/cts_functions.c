@@ -96,7 +96,7 @@ int create_connection(graph_t *network, char *src, char *dest)
     if (!src_e)
         return 0;
     dest_e = (edge_t *)malloc(sizeof(edge_t));
-    if (!dest_e)
+    if (!dest_e) 
         return 0;
     /*source to destination edge*/
     src_e->dest = dest_v, src_e->next = NULL;

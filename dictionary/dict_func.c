@@ -148,36 +148,70 @@ void swap(node_t *node1, node_t* node2)
 }
 
 /**
- * del_word - delete a word in dictionary
- * @dict - dictionary
- * @word: word to delete
+ * find_min - gets the minimum value node in subtree
+ * @node: root of subtree to search
+ * Return: pointer to minimum value
  */
-void del_word(dict_t *dict, node_t *word)
+node_t *find_min(node_t *node)
 {
-    if (!word)
-        return;
-    if (!word->left && !word->right)
-    {
-        free(word->word);
-        free(word->def);
-        free(word);
-        dict->nb_words--;
-        return;
-    }
-    if (word->left && word->right)
-    {
-        node_t *successor = word->right;
-        while (successor->left)
-            successor = successor->left;
-        swap(word, successor);
-        del_word(dict, successor);
-    }
+    node_t *current;
+    if (!node)
+        return NULL;
+    current = node;
+    while (current && current->left)
+        current = current->left;
+    return current;
+}
+
+/**
+ * del_word - delete a word in dictionary
+ * @root: dictionary root
+ * @word: word to delete
+ * Return: dictionary root
+ */
+node_t *del_word(node_t *root, char *word)
+{
+    node_t *temp;
+    if (!root)
+        return root;
+    if (strcasecmp(word, root->word) < 0)
+        root->left = del_word(root->left, word);
+    else if (strcasecmp(word, root->word) > 0)
+        root->right = del_word(root->right, word);
     else
     {
-        node_t *child = (word->left) ? word->left : word->right;
-        swap(word, child);
-        del_word(dict, child);
+        if (!root->left && !root->right)
+        {
+            free(root->word);
+            free(root->def);
+            free(root);
+            return NULL;
+        }
+        else if (root->left == NULL)
+        {
+            temp = root->right;
+            free(root->word);
+            free(root->def);
+            free(root);
+            return temp;
+        }
+        else if (root->right == NULL)
+        {
+            temp = root->left;
+            free(root->word);
+            free(root->def);
+            free(root);
+            return temp;
+        }
+
+        temp = find_min(root->right);
+        free(root->word);
+        free(root->def);
+        root->word = strdup(temp->word);
+        root->def = strdup(temp->def);
+        root->right = del_word(root->right, temp->word);
     }
+    return root;
 }
 
 /**
