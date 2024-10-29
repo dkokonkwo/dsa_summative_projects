@@ -1,6 +1,3 @@
-
-//Improved version with no buffer required.
-//i.e. .huffman file of any size can be decoded back
 #include <stdio.h>
 #include <string.h>
 #include<stdlib.h>
@@ -98,7 +95,7 @@ void decode(FILE *fp_huffman,FILE *fp_out){
 	}
 
 	putchar('\n');
-	if (q[1] != n) printf("garbage input\n");	//the last node should end with a character which reset the que
+	if (q[1] != n) printf("garbage input\n");	//the last node should end with a character which reset the queue
 }
 
 int main(int argc, char* argv[]){
@@ -108,9 +105,8 @@ int main(int argc, char* argv[]){
 
 	system("clear");
 
-
 	if( argc == 2 ) {
-		strcpy(file_name,argv[1]);				//commandline argument directly allows to compress the file
+		strcpy(file_name, argv[1]);				//commandline argument directly allows to compress the file
 		if(strstr(file_name,"huffman") == NULL){
 			printf("\nERROR:wrong file format!\n");
 			return 0;
@@ -120,7 +116,7 @@ int main(int argc, char* argv[]){
       		printf("Too many arguments supplied.\n");
    	}
    	else {
-		printf("Please enter the file to be compressed\t: "); 	//else a prompt comes to enter the file name
+		printf("Please enter the file to be decompressed\t: "); 	//else a prompt comes to enter the file name
 		scanf("%s",file_name);
 		if(strstr(file_name,"huffman") == NULL){
 			printf("\nERROR:wrong file format!\n");
