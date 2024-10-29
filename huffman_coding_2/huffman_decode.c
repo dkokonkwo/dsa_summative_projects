@@ -10,9 +10,9 @@ typedef struct node_t {
 } *node;
 
 //global variables
-int n_nodes = 0, qend = 1; 		//global variables for keep track of no.of nodes and end of the que
+int n_nodes = 0, qend = 1; 		//global variables for keep track of no.of nodes and end of the queue
 struct node_t pool[256] = {{0}};        //pool of nodes
-node qqq[255], *q = qqq-1;      	//the priority que
+node qqq[255], *q = qqq-1;      	//the priority queue
 char buf[1024];				//a string array of the codes for each letter
 
 //function used to create a new node
@@ -25,12 +25,12 @@ node new_node(int freq, char c, node a, node b)
 	}
 	else {
 		n->left = a, n->right = b;	//if there is no frequency provided with the invoking
-		n->freq = a->freq + b->freq;	//the removed nodes at the end of the que will be added to left and right
+		n->freq = a->freq + b->freq;	//the removed nodes at the end of the queue will be added to left and right
 	}
 	return n;
 }
 
-//function ued to insert a node into the priority que
+//function ued to insert a node into the priority queue
 void qinsert(node n)
 {
 	int j, i = qend++;
@@ -64,7 +64,7 @@ void import_table(FILE *fp_table, unsigned int *freq){
                 freq[i++] = (unsigned char)c; 		//get the values from the .table file to update the huffman tree
 	}
 	for (i = 0; i < 128; i++)
-		if (freq[i]) qinsert(new_node(freq[i], i, 0, 0));	//insert new nodes into the que if there is a frequency
+		if (freq[i]) qinsert(new_node(freq[i], i, 0, 0));	//insert new nodes into the queue if there is a frequency
 	while (qend > 2)
 		qinsert(new_node(0, 0, qremove(), qremove()));		//build the tree
 }
@@ -87,7 +87,7 @@ void decode(FILE *fp_huffman,FILE *fp_out){
                 if(n->c){                               //until a leaf (node with a character) meets
                         putchar(n->c);                  //spit that character out and
                         fputc(n->c,fp_out);             //save the character in file
-                        n = q[1];                       //reset the que
+                        n = q[1];                       //reset the queue
                 }
 		c = c<<1;				//shift the character by 1
 		if(++j>7)
@@ -106,7 +106,7 @@ int main(int argc, char* argv[]){
 	system("clear");
 
 	if( argc == 2 ) {
-		strcpy(file_name, argv[1]);				//commandline argument directly allows to compress the file
+		strcpy(file_name, argv[1]);
 		if(strstr(file_name,"huffman") == NULL){
 			printf("\nERROR:wrong file format!\n");
 			return 0;
@@ -116,7 +116,7 @@ int main(int argc, char* argv[]){
       		printf("Too many arguments supplied.\n");
    	}
    	else {
-		printf("Please enter the file to be decompressed\t: "); 	//else a prompt comes to enter the file name
+		printf("Please enter the file to be decompressed\t: ");
 		scanf("%s",file_name);
 		if(strstr(file_name,"huffman") == NULL){
 			printf("\nERROR:wrong file format!\n");
@@ -129,20 +129,21 @@ int main(int argc, char* argv[]){
 		printf("\nERROR: No such file\n");
 		return 0;
 	}
-	strcat(file_name,".table");			//file pointer for .table file
-	if((fp_table = fopen(file_name,"r"))==NULL){	//open the file stream
+	strcat(file_name,".table");
+	if((fp_table = fopen(file_name,"r"))==NULL)
+	{
 		printf("\nERROR: Frequency table cannot be found\n");
 		return 0;
 	}
-	import_table(fp_table,freq);			//import the file and fills frequency array
+	import_table(fp_table,freq);
 
-	*strstr(file_name,".huffman") = '\0';		//search for .huffman and remove it
-	strcpy(temp,"mkdir ");				//concatenating strings for the command
-	strcat(temp,file_name);				//to make a directory with the file name
-	system(strcat(temp,".decoded"));		//with .decoded at the end
+	*strstr(file_name,".huffman") = '\0';
+	strcpy(temp,"mkdir ");
+	strcat(temp,file_name);
+	system(strcat(temp,".decoded"));
 
-	strcpy(temp,"./");				//concatenating string to save the
-	strcat(temp,file_name);				//file with the original name in the .decoded derectory
+	strcpy(temp,"./");
+	strcat(temp,file_name);
 	strcat(temp,".decoded/");
 	if((fp_out = fopen(strcat(temp,file_name),"w"))==NULL){
 		printf("ERROR:Creating decoded file failed\n");	//if any error occured durig creating file; exit
@@ -150,8 +151,8 @@ int main(int argc, char* argv[]){
 	}
 	decode(fp_huffman,fp_out);			//decode the file and save
 
-	fclose(fp_huffman);				//close the file pointer for .huffman file
-	fclose(fp_table);				//close the file pointer for huffman frequency table file
-	fclose(fp_out);					//close file pointer for output file
+	fclose(fp_huffman);
+	fclose(fp_table);
+	fclose(fp_out);
 	return 0;
 }
