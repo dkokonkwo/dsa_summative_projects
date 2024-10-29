@@ -1,9 +1,3 @@
-/***************************************/
-/*     HUFFMAN DECODING PROGRAM        */
-/* CREATED BY ADEESHA SAVINDA DE SILVA */
-/*           12 June 2016              */
-/*     adeesha.savinda@gmail.com       */
-/***************************************/
 
 //Improved version with no buffer required.
 //i.e. .huffman file of any size can be decoded back
@@ -113,11 +107,6 @@ int main(int argc, char* argv[]){
 	unsigned int freq[128] = {0};			//frequency of the letters
 
 	system("clear");
-	printf("**********************************************************************\n");
-	printf("                      COMMUNICATION  ENGINEERING\n");
-	printf("                                SHU M.Eng\n");
-	printf("                            -HUFFMAN DECODER-\n");
-	printf("**********************************************************************\n\n");
 
 
 	if( argc == 2 ) {

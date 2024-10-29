@@ -1,38 +1,45 @@
-/***************************************/
-/*     HUFFMAN DECODING PROGRAM        */
-/* CREATED BY ADEESHA SAVINDA DE SILVA */
-/*           12 June 2016              */
-/*     adeesha.savinda@gmail.com       */
-/***************************************/
-
-//Improved version with no buffer required.
-//i.e. .huffman file of any size can be decoded back
 #include <stdio.h>
 #include <string.h>
 #include<stdlib.h>
 
-//structure used to define a node
-typedef struct node_t {
+/**
+ * struct node_t - structure for node
+ * @left: left child
+ * @right: right child
+ * @freq: character frequency
+ * @c: character
+ */
+typedef struct node_t
+{
 	struct node_t *left, *right;
 	int freq;
 	char c;
 } *node;
 
-//global variables
+/* Global variables */
 int n_nodes = 0, qend = 1; 		//global variables for keep track of no.of nodes and end of the que
 struct node_t pool[256] = {{0}};        //pool of nodes
 node qqq[255], *q = qqq-1;      	//the priority que
 char buf[1024];				//a string array of the codes for each letter
 
-//function used to create a new node
+/**
+ * new_node - function for creating new node
+ * @freq: frequency of characters
+ * @c: character
+ * @a: left node
+ * @b: right node
+ * Return: pointer to new node
+ */
 node new_node(int freq, char c, node a, node b)
 {
 	node n = pool + n_nodes++;
-	if (freq != 0){
+	if (freq != 0)
+	{
 		n->c = c;			//assign the character 'c' to the character of the node (eventually a leaf)
 		n->freq = freq;			//assign frequency
 	}
-	else {
+	else
+	{
 		n->left = a, n->right = b;	//if there is no frequency provided with the invoking
 		n->freq = a->freq + b->freq;	//the removed nodes at the end of the que will be added to left and right
 	}
@@ -43,13 +50,18 @@ node new_node(int freq, char c, node a, node b)
 void qinsert(node n)
 {
 	int j, i = qend++;
-	while ((j = i / 2)) {
+	while ((j = i / 2))
+	{
 		if (q[j]->freq <= n->freq) break;
 		q[i] = q[j], i = j;
 	}
 	q[i] = n;
 }
 
+/**
+ * qremove: removes node from queue
+ * Return: pointer to node
+ */
 node qremove()
 {
 	int i, l;
@@ -57,7 +69,8 @@ node qremove()
 
 	if (qend < 2) return 0;
 	qend--;
-	while ((l = i * 2) < qend) {
+	while ((l = i * 2) < qend)
+	{
 		if (l + 1 < qend && q[l + 1]->freq < q[l]->freq) l++;
 		q[i] = q[l], i = l;
 	}
@@ -65,12 +78,19 @@ node qremove()
 	return n;	//return the node
 }
 
-void import_table(FILE *fp_table, unsigned int *freq){
+/**
+ * import_table - imports frequency table
+ * @fp_table: pointer to file
+ * @freq: frequency array
+ */
+void import_table(FILE *fp_table, unsigned int *freq)
+{
 	char c;						//temporary variable
 	int i = 0;
 
-	while((c=fgetc(fp_table))!=EOF){
-                freq[i++] = (unsigned char)c; 		//get the values from the .table file to update the huffman tree
+	while((c=fgetc(fp_table))!=EOF)
+	{
+        freq[i++] = (unsigned char)c; 		//get the values from the .table file to update the huffman tree
 	}
 	for (i = 0; i < 128; i++)
 		if (freq[i]) qinsert(new_node(freq[i], i, 0, 0));	//insert new nodes into the que if there is a frequency
@@ -78,6 +98,9 @@ void import_table(FILE *fp_table, unsigned int *freq){
 		qinsert(new_node(0, 0, qremove(), qremove()));		//build the tree
 }
 
+/**
+ * decode - decodes
+ */
 void decode(FILE *fp_huffman,FILE *fp_out){
 	int i=0,lim=0,j=0;
 	char c;
@@ -113,11 +136,6 @@ int main(int argc, char* argv[]){
 	unsigned int freq[128] = {0};			//frequency of the letters
 
 	system("clear");
-	printf("**********************************************************************\n");
-	printf("                      COMMUNICATION  ENGINEERING\n");
-	printf("                                SHU M.Eng\n");
-	printf("                            -HUFFMAN DECODER-\n");
-	printf("**********************************************************************\n\n");
 
 
 	if( argc == 2 ) {
